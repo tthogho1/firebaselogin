@@ -1,46 +1,97 @@
-# Getting Started with Create React App
+# Firebase Google Authentication in React
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This project demonstrates how to implement Google authentication in a React application using Firebase. It provides a simple login page that allows users to sign in with their Google accounts.
 
-## Available Scripts
+## Project Overview
 
-In the project directory, you can run:
+This is a sample React application that showcases Firebase authentication with Google as the identity provider. The application displays a login page where users can authenticate using their Google accounts. Once authenticated, the application displays a welcome message with the user's name and a logout button.
 
-### `npm start`
+## Features
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+- Google authentication using Firebase
+- TypeScript support
+- React hooks for state management
+- Authentication state persistence
+- Login and logout functionality
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## Project Structure
 
-### `npm test`
+```
+src/
+├── component/
+│   └── LoginPage.tsx     # Component handling Google authentication
+├── config/
+│   └── firebaseConfig.tsx # Firebase configuration
+├── App.tsx               # Main application component
+├── index.tsx             # Entry point
+└── .env                  # Environment variables for Firebase configuration
+```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Key Components
 
-### `npm run build`
+### App.tsx
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+The main application component that:
+- Monitors the authentication state using Firebase's `onAuthStateChanged`
+- Renders the LoginPage component
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### LoginPage.tsx
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Handles the authentication flow:
+- Provides a "Login with Google" button
+- Implements Google sign-in using Firebase's `signInWithPopup`
+- Displays different content based on whether the user is logged in or not
+- Provides a logout button for authenticated users
 
-### `npm run eject`
+### firebaseConfig.tsx
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+Sets up the Firebase configuration:
+- Initializes the Firebase app with configuration from environment variables
+- Exports the auth object for use in other components
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Setup and Configuration
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+1. Create a Firebase project at [Firebase Console](https://console.firebase.google.com/)
+2. Enable Google authentication in the Firebase Authentication section
+3. Create a `.env` file in the root directory with your Firebase configuration:
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+```
+REACT_APP_FIREBASE_API_KEY="your-api-key"
+REACT_APP_FIREBASE_AUTH_DOMAIN="your-project-id.firebaseapp.com"
+REACT_APP_FIREBASE_PROJECT_ID="your-project-id"
+REACT_APP_FIREBASE_STORAGE_BUCKET="your-project-id.appspot.com"
+REACT_APP_FIREBASE_MESSAGING_SENDER_ID="your-messaging-sender-id"
+REACT_APP_FIREBASE_APP_ID="your-app-id"
+REACT_APP_FIREBASE_MEASUREMENT_ID="your-measurement-id"
+```
 
-## Learn More
+## Installation
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+1. Clone the repository
+2. Install dependencies:
+   ```
+   npm install
+   ```
+3. Start the development server:
+   ```
+   npm start
+   ```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## Usage
+
+1. Open the application in your browser
+2. Click the "Login with Google" button
+3. Select your Google account in the popup
+4. After successful authentication, you'll see a welcome message with your name
+5. Click the "Logout" button to sign out
+
+## Dependencies
+
+- React 19.1.0
+- Firebase 11.6.1
+- TypeScript 4.9.5
+- React Scripts 5.0.1
+
+## License
+
+This project is open-source and available under the MIT License.
