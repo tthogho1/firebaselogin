@@ -36,3 +36,14 @@
     transform: rotate(360deg);
   }
 }
+
+/* New styles for our app container */
+.app-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  background-color: #f0f2f5;
+}
