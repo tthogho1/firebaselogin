@@ -2,13 +2,12 @@ import React from 'react';
 import { SessionProvider } from 'next-auth/react';
 import { AuthProvider } from './context/AuthContext';
 import LoginPage from './component/LoginPage';
-import './App.css';
 
 export default function App() {
   return (
     <SessionProvider>
       <AuthProvider>
-        <div className="app-container">
+        <div className="min-h-screen flex flex-col items-center justify-center p-8 bg-gray-100">
           <LoginPage />
         </div>
       </AuthProvider>

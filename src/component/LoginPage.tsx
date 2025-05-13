@@ -3,8 +3,6 @@ import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import { auth } from '../config/firebaseConfig'; // Import Firebase configuration
 import { useAuth } from '../context/AuthContext'; // Import our custom auth context
 
-import '../styles/LoginPage.css'; // We'll create this file later
-
 const googleProvider = new GoogleAuthProvider();
 
 const LoginPage: React.FC = () => {
@@ -53,37 +51,48 @@ const LoginPage: React.FC = () => {
     const provider = authProvider === 'firebase' ? 'Firebase' : 'Auth.js';
     
     return (
-      <div className="login-container logged-in">
-        <h1>Logged In</h1>
-        <p>Welcome, {displayName}!</p>
-        <p className="provider-info">Authenticated with: {provider}</p>
-        <button className="logout-button" onClick={handleLogout}>Logout</button>
+      <div className="max-w-3xl mx-auto p-8 text-center bg-gray-50 rounded-lg shadow-md">
+        <h1 className="text-2xl font-bold mb-8 text-gray-800">Logged In</h1>
+        <p className="text-lg">Welcome, {displayName}!</p>
+        <p className="mt-4 italic text-gray-600">Authenticated with: {provider}</p>
+        <button 
+          className="mt-6 px-6 py-3 bg-logout-red text-white rounded font-medium hover:bg-logout-red-hover transition-colors"
+          onClick={handleLogout}
+        >
+          Logout
+        </button>
       </div>
     );
   }
 
   // If not logged in, show login options
   return (
-    <div className="login-container">
-      <h1>Login</h1>
-      <div className="login-options">
-        <div className="login-option">
-          <h2>Firebase Authentication</h2>
-          <button className="login-button firebase" onClick={handleFirebaseGoogleSignIn}>
+    <div className="max-w-3xl mx-auto p-8 text-center bg-gray-50 rounded-lg shadow-md">
+      <h1 className="text-2xl font-bold mb-8 text-gray-800">Login</h1>
+      <div className="flex justify-around flex-wrap gap-8">
+        <div className="flex-1 min-w-[250px] p-6 bg-white rounded-lg shadow-sm">
+          <h2 className="mb-6 text-lg font-medium text-gray-700">Firebase Authentication</h2>
+          <button 
+            className="px-6 py-3 bg-firebase-yellow text-gray-800 rounded font-medium hover:bg-firebase-yellow-hover transition-colors"
+            onClick={handleFirebaseGoogleSignIn}
+          >
             Login with Google (Firebase)
           </button>
         </div>
         
-        <div className="login-option">
-          <h2>Auth.js Authentication</h2>
-          <button className="login-button authjs" onClick={handleAuthJsGoogleSignIn}>
+        <div className="flex-1 min-w-[250px] p-6 bg-white rounded-lg shadow-sm">
+          <h2 className="mb-6 text-lg font-medium text-gray-700">Auth.js Authentication</h2>
+          <button 
+            className="px-6 py-3 bg-authjs-blue text-white rounded font-medium hover:bg-authjs-blue-hover transition-colors"
+            onClick={handleAuthJsGoogleSignIn}
+          >
             Login with Google (Auth.js)
           </button>
         </div>
       </div>
       
       {(error || authError) && (
-        <p className="error-message">Error: {error || authError}</p>
+        <p className="mt-6 text-logout-red font-medium">Error: {error || authError}</p>
       )}
     </div>
   );
