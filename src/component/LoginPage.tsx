@@ -1,31 +1,18 @@
-import React, { useState, useEffect } from 'react';
-import { GoogleAuthProvider, signInWithPopup, User } from 'firebase/auth';
+import React, { useState } from 'react';
+import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import { auth } from '../config/firebaseConfig'; // Import Firebase configuration
+import { useAuth } from '../context/AuthContext'; // Import our custom auth context
+
+import '../styles/LoginPage.css'; // We'll create this file later
 
 const googleProvider = new GoogleAuthProvider();
 
 const LoginPage: React.FC = () => {
-  const [user, setUser] = useState<User | null>(null);
+  const { user, authJsSession, error: authError, signInWithAuthJs, signOutFromAuthJs, authProvider } = useAuth();
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    // Monitor changes in user's authentication state
-    const unsubscribe = auth.onAuthStateChanged(authUser => {
-      if (authUser) {
-        setUser(authUser);
-        console.log('Logged in user:', authUser);
-        // Perform post-login actions here (e.g., redirect)
-      } else {
-        setUser(null);
-        console.log('Not logged in');
-      }
-    });
-
-    // Detach listener when component is unmounted
-    return () => unsubscribe();
-  }, []);
-
-  const handleGoogleSignIn = async () => {
+  // Firebase Google sign-in handler
+  const handleFirebaseGoogleSignIn = async () => {
     setError(null);
     try {
       const result = await signInWithPopup(auth, googleProvider);
@@ -33,29 +20,71 @@ const LoginPage: React.FC = () => {
       const credential = GoogleAuthProvider.credentialFromResult(result);
       const token = credential?.accessToken;
       const user = result.user;
-      console.log('Google sign-in successful:', { user, token });
-      // The login state is handled by onAuthStateChanged in useEffect
+      console.log('Firebase Google sign-in successful:', { user, token });
     } catch (err: any) {
-      console.error('Google sign-in error:', err);
-      setError(err.message || 'Failed to sign in with Google');
+      console.error('Firebase Google sign-in error:', err);
+      setError(err.message || 'Failed to sign in with Google via Firebase');
     }
   };
 
-  if (user) {
+  // Auth.js Google sign-in handler
+  const handleAuthJsGoogleSignIn = async () => {
+    setError(null);
+    try {
+      await signInWithAuthJs();
+    } catch (err: any) {
+      console.error('Auth.js Google sign-in error:', err);
+      setError(err.message || 'Failed to sign in with Google via Auth.js');
+    }
+  };
+
+  // Handle logout based on which provider is being used
+  const handleLogout = async () => {
+    if (authProvider === 'firebase') {
+      await auth.signOut();
+    } else if (authProvider === 'authjs') {
+      await signOutFromAuthJs();
+    }
+  };
+
+  // If user is authenticated with either method, show logged in view
+  if (user || authJsSession) {
+    const displayName = user?.displayName || authJsSession?.user?.name || 'User';
+    const provider = authProvider === 'firebase' ? 'Firebase' : 'Auth.js';
+    
     return (
-      <div>
+      <div className="login-container logged-in">
         <h1>Logged In</h1>
-        <p>Welcome, {user.displayName}!</p>
-        <button onClick={() => auth.signOut()}>Logout</button>
+        <p>Welcome, {displayName}!</p>
+        <p className="provider-info">Authenticated with: {provider}</p>
+        <button className="logout-button" onClick={handleLogout}>Logout</button>
       </div>
     );
   }
 
+  // If not logged in, show login options
   return (
-    <div>
+    <div className="login-container">
       <h1>Login</h1>
-      <button onClick={handleGoogleSignIn}>Login with Google</button>
-      {error && <p style={{ color: 'red' }}>Error: {error}</p>}
+      <div className="login-options">
+        <div className="login-option">
+          <h2>Firebase Authentication</h2>
+          <button className="login-button firebase" onClick={handleFirebaseGoogleSignIn}>
+            Login with Google (Firebase)
+          </button>
+        </div>
+        
+        <div className="login-option">
+          <h2>Auth.js Authentication</h2>
+          <button className="login-button authjs" onClick={handleAuthJsGoogleSignIn}>
+            Login with Google (Auth.js)
+          </button>
+        </div>
+      </div>
+      
+      {(error || authError) && (
+        <p className="error-message">Error: {error || authError}</p>
+      )}
     </div>
   );
 };
