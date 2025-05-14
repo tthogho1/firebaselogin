@@ -67,7 +67,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const signInWithAuthJs = async () => {
     try {
       await signIn('google', { callbackUrl: window.location.origin });
-    } catch (error) {
+    } catch (error: any) {
       console.error('Auth.js sign in error:', error);
       setError('Failed to sign in with Auth.js');
     }
@@ -77,7 +77,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const signOutFromAuthJs = async () => {
     try {
       await signOut({ callbackUrl: window.location.origin });
-    } catch (error) {
+    } catch (error: any) {
       console.error('Auth.js sign out error:', error);
       setError('Failed to sign out from Auth.js');
     }
